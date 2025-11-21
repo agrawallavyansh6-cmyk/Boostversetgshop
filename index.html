@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BoostVerseTG Shop</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Use Inter Font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0c1d; /* Dark background */
+        }
+        /* Custom Gradient for Branding */
+        .gradient-text {
+            /* Indigo/Cyan to Electric Purple/Pink Gradient */
+            background: linear-gradient(90deg, #6366F1, #38BDF8, #F472B6, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 900;
+        }
+        .card-bg {
+            background-color: #1a182f;
+            transition: transform 0.3s ease;
+        }
+        .card-bg:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(102, 51, 153, 0.5), 0 4px 6px -2px rgba(102, 51, 153, 0.3);
+        }
+        /* Custom Scrollbar for better dark mode look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #6366F1; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #1a182f; }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- HEADER & HIGHLIGHTED NAME -->
+        <header class="text-center py-10 mb-8 border-b-2 border-indigo-500/30">
+            <h1 class="text-3xl sm:text-5xl md:text-6xl leading-tight">
+                Welcome to the
+                <span class="gradient-text text-6xl sm:text-7xl md:text-8xl block mt-2 animate-pulse">
+                    BoostVerseTG Shop
+                </span>
+            </h1>
+            <p class="mt-4 text-xl text-indigo-300">Your portal for elite Digital Products, Design, and Gaming Services.</p>
+        </header>
+
+        <!-- SERVICES GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- A. Digital Products -->
+            <section class="card-bg p-6 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-4 text-cyan-400 flex items-center">
+                    <span class="text-4xl mr-3">🌐</span> Digital Products
+                </h2>
+                <div class="space-y-3">
+                    <!-- Service List with Buy Buttons -->
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Webpage / Bio Link Website</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-cyan-300">₹149 – ₹399</span> (Base Price: ₹149)</p>
+                        </div>
+                        <button onclick="openUpiModal('Webpage / Bio Link Website', 149)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹149)
+                        </button>
+                    </div>
+                    
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Full Website Template</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-cyan-300">₹299 – ₹799</span> (Base Price: ₹299)</p>
+                        </div>
+                        <button onclick="openUpiModal('Full Website Template', 299)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹299)
+                        </button>
+                    </div>
+
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Portfolio / Business Page</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-cyan-300">₹199 – ₹499</span> (Base Price: ₹199)</p>
+                        </div>
+                        <button onclick="openUpiModal('Portfolio / Business Page', 199)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹199)
+                        </button>
+                    </div>
+                    
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Custom Landing Page</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-cyan-300">₹399 – ₹999</span> (Base Price: ₹399)</p>
+                        </div>
+                        <button onclick="openUpiModal('Custom Landing Page', 399)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹399)
+                        </button>
+                    </div>
+
+                </div>
+                <!-- Note about dynamic pricing -->
+                <p class="mt-4 text-xs text-gray-500 italic">Note: Prices shown are the base rates. Final custom pricing will be confirmed before work begins.</p>
+                
+                <button onclick="alert('In a real app, this would redirect to a detailed service page or payment link.')" class="mt-4 w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+                    View & Order Digital Products (See all details)
+                </button>
+            </section>
+
+            <!-- B. Design Services -->
+            <section class="card-bg p-6 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-4 text-pink-400 flex items-center">
+                    <span class="text-4xl mr-3">🎨</span> Design Services
+                </h2>
+                <div class="space-y-3">
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Gaming Logo</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-pink-300">₹99 – ₹249</span> (Base Price: ₹99)</p>
+                        </div>
+                        <button onclick="openUpiModal('Gaming Logo', 99)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹99)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Professional Logo</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-pink-300">₹149 – ₹399</span> (Base Price: ₹149)</p>
+                        </div>
+                        <button onclick="openUpiModal('Professional Logo', 149)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹149)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">YouTube Thumbnail</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-pink-300">₹49 – ₹99</span> (Base Price: ₹49)</p>
+                        </div>
+                        <button onclick="openUpiModal('YouTube Thumbnail', 49)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹49)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Instagram / Telegram Banner</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-pink-300">₹69 – ₹149</span> (Base Price: ₹69)</p>
+                        </div>
+                        <button onclick="openUpiModal('Instagram / Telegram Banner', 69)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹69)
+                        </button>
+                    </div>
+                </div>
+                 <button onclick="alert('In a real app, this would redirect to a detailed service page or payment link.')" class="mt-4 w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+                    View & Order Design Services (See all details)
+                </button>
+            </section>
+
+            <!-- C. Gaming-Related Services -->
+            <section class="card-bg p-6 rounded-xl shadow-lg mt-6">
+                <h2 class="text-3xl font-bold mb-4 text-indigo-400 flex items-center">
+                    <span class="text-4xl mr-3">🎮</span> Gaming-Related
+                </h2>
+                <p class="text-sm text-yellow-400 mb-4 font-medium">Note: Allowed Only Legal & Safe Services. No account selling.</p>
+                <div class="space-y-3">
+                     <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Sensitivity Settings Setup</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-indigo-300">₹49 – ₹99</span> (Base Price: ₹49)</p>
+                        </div>
+                        <button onclick="openUpiModal('Sensitivity Settings Setup', 49)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹49)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Keybind Layout Design</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-indigo-300">₹59 – ₹129</span> (Base Price: ₹59)</p>
+                        </div>
+                        <button onclick="openUpiModal('Keybind Layout Design', 59)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹59)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Gaming Montage Edit</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-indigo-300">₹149 – ₹499</span> (Base Price: ₹149)</p>
+                        </div>
+                        <button onclick="openUpiModal('Gaming Montage Edit', 149)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹149)
+                        </button>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">Game Thumbnail / Cover</p>
+                            <p class="text-sm text-gray-400">Price: <span class="text-lg font-bold text-indigo-300">₹49 – ₹149</span> (Base Price: ₹49)</p>
+                        </div>
+                        <button onclick="openUpiModal('Game Thumbnail / Cover', 49)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-full transition duration-200">
+                            Buy (₹49)
+                        </button>
+                    </div>
+                </div>
+                 <button onclick="alert('In a real app, this would redirect to a detailed service page or payment link.')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+                    View & Order Gaming Services (See all details)
+                </button>
+            </section>
+
+            <!-- D. Custom Services & Banner Styles -->
+            <section class="card-bg p-6 rounded-xl shadow-lg mt-6">
+                <h2 class="text-3xl font-bold mb-4 text-yellow-400 flex items-center">
+                    <span class="text-4xl mr-3">⚡</span> Custom Services & Styles
+                </h2>
+                
+                <h3 class="text-xl font-semibold mt-4 text-gray-300">Custom Services</h3>
+                <ul class="list-disc list-inside ml-4 text-gray-400 mt-2 space-y-1">
+                    <li>Custom Website</li>
+                    <li>Custom Graphic Pack</li>
+                    <li>Full Branding Pack</li>
+                    <li>Bulk Orders</li>
+                </ul>
+                <p class="mt-2 text-sm text-gray-200">Price: <span class="text-lg font-bold text-yellow-300">According to work (₹199 – ₹1999)</span></p>
+
+                <h3 class="text-xl font-semibold mt-6 text-gray-300">Banner Design Styles</h3>
+                <ul class="list-decimal list-inside ml-4 text-gray-400 mt-2 space-y-1">
+                    <li>🎨 Modern Telegram Channel Banner</li>
+                    <li>⚡ Gaming Style Banner</li>
+                    <li>💎 Business/Professional Banner</li>
+                    <li>🌌 Futuristic / Sci-Fi Banner</li>
+                    <li>🧩 Minimal Aesthetic Banner</li>
+                    <li>🔥 Digital Shop Banner</li>
+                </ul>
+                
+                <button onclick="openCustomQuoteModal()" class="mt-4 w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md">
+                    Request Custom Quote
+                </button>
+            </section>
+
+        </div>
+
+        <!-- IMPORTANT FULFILLMENT NOTE -->
+        <footer class="mt-12 p-6 bg-green-900/40 rounded-xl border-l-4 border-green-500 shadow-2xl">
+            <h3 class="text-xl font-bold text-green-300 mb-2">✅ ORDER SYSTEM ACTIVE</h3>
+            <p class="text-sm text-gray-200 space-y-2">
+                Your payment and submission system is now fully configured.
+            </p>
+            <ul class="list-disc list-inside ml-4 mt-3 text-sm text-gray-300 space-y-1">
+                <li>**Payment Method:** UPI ID: <span class="text-green-300 font-bold">lavyanshboss@fam</span></li>
+                <li>**Submission Form:** Successfully linked!</li>
+                <li>**Notification Email:** Ensure your Google Form is set to notify: 
+                    <span class="text-green-300 font-bold block mt-1">agrawallavyansh6@gmail.com</span> upon every submission.
+                </li>
+            </ul>
+        </footer>
+
+    </div>
+
+    <!-- CUSTOM MESSAGE BOX AND UPI MODAL HTML -->
+    <div id="customMessageBox" class="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center hidden">
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-11/12 border-t-4 border-indigo-500 transform transition-all duration-300 scale-95 opacity-0" id="messageBoxContent">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const UPI_ID = 'lavyanshboss@fam';
+        
+        // !!! ACTUAL GOOGLE FORM LINK PROVIDED BY USER !!!
+        const POST_PAYMENT_FORM_URL = 'https://forms.gle/8cfhKqFBmtFYqWRa6'; 
+
+        // --- UPI PAYMENT MODAL FUNCTION ---
+
+        /**
+         * Opens the custom modal for UPI payment.
+         * @param {string} serviceName - The name of the service being purchased.
+         * @param {number} amount - The amount in rupees.
+         */
+        function openUpiModal(serviceName, amount) {
+            
+            // Generates the UPI deep link QR code content (mandates name/payee info for stability)
+            const upiUrl = `upi://pay?pa=${UPI_ID}&pn=BoostVerseTGShop&am=${amount}.00&cu=INR&tn=${serviceName.replace(/\s/g, '+')}`;
+            
+            // Uses a public QR code generator (safe for this context)
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+
+            const contentHtml = `
+                <div class="text-center text-white">
+                    <h3 class="text-2xl font-bold text-green-400 mb-4">Complete Payment via UPI</h3>
+                    
+                    <p class="text-lg font-semibold text-gray-300">${serviceName}</p>
+                    <p class="text-4xl font-extrabold text-white mb-4">₹${amount}</p>
+
+                    <div class="flex justify-center mb-4">
+                        <img src="${qrCodeUrl}" onerror="this.onerror=null; this.src='https://placehold.co/200x200/5cb85c/ffffff?text=QR+Error'" alt="UPI QR Code" class="rounded-lg border-4 border-green-500 shadow-lg">
+                    </div>
+
+                    <p class="text-sm text-gray-400 mb-2">Scan with any UPI app (PhonePe, GPay, PayTM, etc.)</p>
+                    <p class="font-mono text-xl text-yellow-300 select-all mb-4">
+                        ${UPI_ID}
+                    </p>
+                    
+                    <hr class="border-gray-700 my-4">
+
+                    <p class="text-sm font-bold text-red-300 mb-3">STEP 2: CONFIRM ORDER & UPLOAD SCREENSHOT</p>
+                    <p class="text-sm text-gray-300 mb-4">
+                        After successful payment, click the button below to submit your requirements and **upload the payment screenshot.**
+                    </p>
+                    
+                    <a href="${POST_PAYMENT_FORM_URL}" target="_blank" class="w-full inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                        Submit Screenshot & Requirements
+                    </a>
+
+                    <button onclick="closeCustomMessageBox()" class="mt-4 w-full bg-gray-600 hover:bg-gray-700 py-2 px-4 rounded-lg transition duration-200">
+                        Close Payment Info
+                    </button>
+                </div>
+            `;
+            showCustomMessageBox(contentHtml);
+        }
+
+        // Handles the Custom Quote button separately
+        function openCustomQuoteModal() {
+            const contentHtml = `
+                <div class="text-center text-white">
+                    <h3 class="text-2xl font-bold text-yellow-400 mb-4">Custom Quote Request</h3>
+                    <p class="text-lg font-semibold text-gray-300">Price: N/A (Quote required)</p>
+                    <p class="mt-4 text-sm text-gray-300">
+                        Please use the Order Submission Form to outline your custom requirements (website, graphics pack, bulk order). We will provide a specific quote before the work begins.
+                    </p>
+                    <p class="mt-4 font-bold text-red-300">
+                        For custom services, do NOT pay anything until we have provided you with a final price and instructions.
+                    </p>
+
+                    <a href="${POST_PAYMENT_FORM_URL}" target="_blank" class="w-full inline-block mt-6 bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                        Go to Custom Requirements Form
+                    </a>
+
+                    <button onclick="closeCustomMessageBox()" class="mt-4 w-full bg-gray-600 hover:bg-gray-700 py-2 px-4 rounded-lg transition duration-200">
+                        Close
+                    </button>
+                </div>
+            `;
+            showCustomMessageBox(contentHtml);
+        }
+
+
+        // --- CUSTOM MESSAGE BOX FUNCTIONS (Base modal logic) ---
+        
+        function createCustomMessageBox() {
+            let box = document.getElementById('customMessageBox');
+            let content = document.getElementById('messageBoxContent');
+            if (!box) {
+                return document.getElementById('customMessageBox');
+            }
+            return box;
+        }
+
+        function showCustomMessageBox(contentHtml) {
+            const box = document.getElementById('customMessageBox');
+            const content = document.getElementById('messageBoxContent');
+            content.innerHTML = contentHtml;
+            
+            box.classList.remove('hidden');
+            // Trigger transition
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeCustomMessageBox() {
+            const box = document.getElementById('customMessageBox');
+            const content = document.getElementById('messageBoxContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                box.classList.add('hidden');
+            }, 300);
+        }
+        
+        // This replaces the use of 'alert()' in the Gaming and Design sections for better UX
+        function alert(message) {
+            showCustomMessageBox(`
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-pink-300 mb-2">Information</h3>
+                    <p class="text-gray-300">${message}</p>
+                    <button onclick="closeCustomMessageBox()" class="mt-4 bg-gray-600 hover:bg-gray-700 py-2 px-4 rounded-lg">OK</button>
+                </div>
+            `);
+        }
+        
+    </script>
+</body>
+</html>
+
