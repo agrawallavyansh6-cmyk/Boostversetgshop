@@ -32,8 +32,7 @@
         <!-- Header Section -->
         <header class="py-6 mb-8 border-b border-purple-700/50">
             <h1 class="text-4xl font-extrabold text-center">
-                <span class="gradient-text from-indigo-400 via-purple-400 to-pink-400" 
-                      style="--tw-gradient-stops: var(--tw-gradient-from) var(--tw-gradient-via) var(--tw-gradient-to);">
+                <span class="gradient-text from-indigo-400 via-purple-400 to-pink-400">
                     BoostVerseTG Shop
                 </span>
             </h1>
@@ -54,7 +53,6 @@
                         class="w-full bg-gray-800 hover:bg-gray-700 transition duration-150 text-purple-200 font-semibold py-3 rounded-xl border border-purple-600 shadow-lg shadow-purple-900/40 text-sm">
                     🔐 Admin / Orders Panel
                 </button>
-                <!-- New Track Order footer button (optional shortcut) -->
                 <button onclick="navigate('track-order')" 
                         class="w-full bg-green-700 hover:bg-green-600 transition duration-150 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-900/40 text-sm">
                     📌 Track Order Status
@@ -72,7 +70,7 @@
         const EMAIL_RECEIVER = "agrawallavyansh6@gmail.com";
         const UPI_ID = "lavyanshboss@fam";
 
-        // Admin credentials (jo tumne diye)
+        // Admin credentials
         const ADMIN_USERNAME = "nexonrandxbeta";
         const ADMIN_PASSWORD = "madarapapa";
 
@@ -113,7 +111,7 @@
             'game-thumbnail': { cat: 'C', name: 'Game Thumbnail / Cover', price: '₹49 – ₹149' },
             'gaming-montage': { cat: 'C', name: 'Gaming Montage Edit', price: '₹149 – ₹499' },
             
-            // Category D: Custom Services (Uses a single custom service entry)
+            // Category D: Custom Services
             'custom-service': { cat: 'D', name: 'Custom Services (Website/Graphic Pack/Branding/Bulk)', price: '₹199 – ₹1999 (According to work)' }
         };
 
@@ -131,12 +129,10 @@
 
         function copyUpiId() {
             const upiId = UPI_ID;
-            // Use execCommand for broader compatibility in iframes
             const tempInput = document.createElement('input');
             tempInput.value = upiId;
             document.body.appendChild(tempInput);
             tempInput.select();
-            
             try {
                 document.execCommand('copy');
                 showToast(`✅ Copied UPI ID: ${upiId}`);
@@ -148,13 +144,12 @@
             }
         }
 
-        // Naya function: Order ID copy
+        // Copy Order ID
         function copyOrderId(orderId) {
             try {
                 navigator.clipboard.writeText(orderId);
                 showToast("📋 Order ID copied!");
             } catch (e) {
-                // Fallback
                 const tempInput = document.createElement('input');
                 tempInput.value = orderId;
                 document.body.appendChild(tempInput);
@@ -166,7 +161,6 @@
         }
 
         // --- Orders Persistence (localStorage) ---
-
         function loadOrders() {
             try {
                 const raw = localStorage.getItem('boostverse_orders');
@@ -186,7 +180,6 @@
         }
 
         // --- Admin Helpers ---
-
         function isAdminLoggedIn() {
             return sessionStorage.getItem('isAdmin') === 'true';
         }
@@ -198,7 +191,6 @@
         }
 
         // --- Router & Navigation ---
-
         function navigate(path) {
             window.location.hash = path;
             renderPage();
@@ -224,13 +216,13 @@
             } else if (page === 'track-order') {
                 renderTrackOrderPage();
             } else {
-                renderHome(); // Default to home
+                renderHome();
             }
         }
         
-        // --- Page Rendering Functions ---
+        // --- Pages ---
 
-        // Renders the main home page with categories
+        // Home Page
         function renderHome() {
             let html = `
                 <section class="space-y-6">
@@ -251,7 +243,6 @@
                 `;
             });
 
-            // Track Order shortcut on home
             html += `
                 <button onclick="navigate('track-order')" 
                         class="mt-8 w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-900/50">
@@ -276,7 +267,7 @@
 
                     <button onclick="trackOrder()"
                             class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-lg transition duration-150 shadow-md shadow-purple-900/40">
-                        Check Status
+                        🔍 Check Status
                     </button>
 
                     <div id="track-result" class="hidden mt-5 p-4 rounded-lg bg-gray-900 border border-gray-700 text-sm text-gray-100"></div>
@@ -290,6 +281,7 @@
             appContent.innerHTML = html;
         }
 
+        // Track Order Logic
         function trackOrder() {
             const input = document.getElementById('track-id');
             const resultBox = document.getElementById('track-result');
@@ -301,7 +293,6 @@
                 return;
             }
 
-            // String compare so purane numeric IDs bhi kaam karein
             const order = ORDERS.find(o => String(o.id) === id);
 
             if (!order) {
@@ -326,7 +317,7 @@
             `;
         }
 
-        // Renders the list of services within a category
+        // Category List
         function renderCategoryList(catId) {
             const category = CATEGORIES[catId];
             let html = `
@@ -358,7 +349,7 @@
             appContent.innerHTML = html;
         }
 
-        // Renders the detail page and the order form
+        // Service Detail + Order Form
         function renderServiceDetail(serviceId) {
             const service = SERVICES[serviceId];
             const category = CATEGORIES[service.cat];
@@ -448,8 +439,6 @@
 
                     <div id="confirmation-message" class="hidden mt-6 p-4 bg-teal-800/50 border-l-4 border-teal-500 rounded-lg text-white">
                         <!-- JS se yaha Order ID wali info inject hogi -->
-                        <h4 class="font-bold text-lg mb-1">Order Placed!</h4>
-                        <p>Thank you! Your order has been submitted and saved. You can view it in the Admin Orders Panel.</p>
                     </div>
 
                     <button onclick="navigate('category/${service.cat}')" class="mt-8 text-purple-400 hover:text-purple-300 flex items-center">
@@ -460,12 +449,10 @@
             `;
             appContent.innerHTML = html;
             
-            // Attach event listener for form submission
             document.getElementById('order-form').addEventListener('submit', handleOrderSubmission);
         }
 
         // --- Admin Pages ---
-
         function renderAdminPage() {
             if (isAdminLoggedIn()) {
                 renderAdminDashboard();
@@ -614,7 +601,6 @@
         }
 
         // --- Interaction Logic (Customer Side) ---
-        
         function showPaymentConfirmation() {
             const statusDiv = document.getElementById('payment-status');
             const screenshotInput = document.getElementById('screenshot');
@@ -639,19 +625,16 @@
             const paymentStatus = document.getElementById('payment-status');
 
             if (paymentStatus.classList.contains('hidden')) {
-                console.error("⛔ ORDER ERROR: Please simulate payment completion before submitting the order.");
-                confirmationMessage.innerHTML = '<h4 class="font-bold text-lg mb-1 text-red-400">Submission Error</h4><p>Please click "Simulate Payment Done / Get Screenshot Link" before submitting the order.</p>';
-                confirmationMessage.classList.remove('hidden');
-                confirmationMessage.classList.replace('bg-teal-800/50', 'bg-red-900/50');
+                showToast('⛔ Please confirm payment first.');
                 return;
             }
 
-            // --- Generate Order ID (User Friendly) ---
+            // Generate user-friendly Order ID
             const orderId = "BV" + Math.floor(100000 + Math.random() * 900000); // Example: BV123456
 
-            // --- Create & Save Order Object (localStorage) ---
+            // Create & Save Order Object
             const newOrder = {
-                id: orderId, // use generated order ID
+                id: orderId,
                 createdAt: new Date().toISOString(),
                 serviceId: serviceId,
                 serviceName: service.name,
@@ -669,7 +652,7 @@
             ORDERS.unshift(newOrder);
             saveOrders();
 
-            // --- SIMULATE EMAIL NOTIFICATION ---
+            // Simulate email notification in console
             const notificationData = {
                 targetEmail: EMAIL_RECEIVER,
                 type: 'New BoostVerseTG Shop Order',
@@ -688,7 +671,6 @@
                 }
             };
 
-            // Log the notification payload to the console (Simulating the server-side email)
             console.log("=================================================");
             console.log(`🚀 [SERVER SIMULATION] NOTIFICATION SENT TO: ${EMAIL_RECEIVER}`);
             console.log(JSON.stringify(notificationData, null, 2));
@@ -697,7 +679,6 @@
             // Show confirmation UI with Order ID
             form.classList.add('hidden');
             confirmationMessage.classList.remove('hidden');
-            confirmationMessage.classList.replace('bg-red-900/50', 'bg-teal-800/50');
             confirmationMessage.innerHTML = `
                 <h4 class="font-bold text-lg mb-2">🎉 Order Placed Successfully!</h4>
                 <p class="mb-2">Thank you! Your order has been submitted and saved.</p>
@@ -712,6 +693,10 @@
                 <p class="text-xs text-gray-300 mt-1">
                     Save this Order ID safely. You can use it anytime on the <strong>Track Order</strong> page to check your order status.
                 </p>
+                <button onclick="navigate('track-order')" 
+                        class="mt-4 bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full text-sm font-semibold">
+                    📌 Go to Track Order
+                </button>
             `;
 
             showToast('✅ Order placed & saved. Use your Order ID to track status.');
@@ -720,15 +705,9 @@
         // --- Initialization ---
         window.addEventListener('hashchange', renderPage);
         window.addEventListener('load', () => {
-            try {
-                console.log("Client-side app loaded.");
-            } catch (e) {
-                console.warn("Could not set Firebase log level (this is fine for a non-Firebase app).", e);
-            }
             loadOrders();
             renderPage();
         });
-
     </script>
 </body>
 </html>
