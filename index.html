@@ -6,6 +6,16 @@
     <title>BoostVerseTG Shop</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function () {
+            // Your PUBLIC KEY
+            emailjs.init("EmFHkhnSPgPbfweDD");
+        })();
+    </script>
+
     <style>
         /* Custom styles for the cool gradient text */
         .gradient-text {
@@ -158,6 +168,16 @@
                 document.body.removeChild(tempInput);
                 showToast("📋 Order ID copied!");
             }
+        }
+
+        // Convert file to Base64 string (for EmailJS)
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result); // Data URL (base64)
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(file);
+            });
         }
 
         // --- Orders Persistence (localStorage) ---
@@ -427,7 +447,7 @@
                             <label for="screenshot" class="block text-sm font-medium text-gray-300 mb-2">Payment Screenshot Proof (Simulated Upload)</label>
                             <input type="file" id="screenshot" name="screenshot" accept="image/*" disabled
                                    class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-500 file:text-white hover:file:bg-purple-600">
-                            <p class="text-xs text-gray-500 mt-1">Note: The actual file content will not be sent, only the file name will be logged.</p>
+                            <p class="text-xs text-gray-500 mt-1">Note: The actual file content will not be sent to any backend server, but will be emailed via EmailJS.</p>
                         </div>
                         
                         <button type="submit" 
@@ -541,18 +561,18 @@
                                 <span class="text-xs text-gray-500">${createdStr}</span>
                             </div>
                             <h3 class="text-lg font-semibold text-white">${order.serviceName}</h3>
-                            <p class="text-sm text-pink-400 mb-1">${order.priceRange}</p>
-                            <p class="text-xs text-gray-400 mb-2">${order.category}</p>
+                            <p class="text-sm text-pink-400 mb-1">${order.priceRange || ''}</p>
+                            <p class="text-xs text-gray-400 mb-2">${order.category || ''}</p>
                             
                             <p class="text-sm text-gray-300">
-                                <span class="font-semibold">Client:</span> ${order.contactName} 
-                                <span class="text-xs text-gray-400">(${order.contactEmail})</span>
+                                <span class="font-semibold">Client:</span> ${order.contactName || 'N/A'} 
+                                <span class="text-xs text-gray-400">(${order.contactEmail || 'N/A'})</span>
                             </p>
                             <p class="text-sm text-gray-300 mt-1">
                                 <span class="font-semibold">Variant:</span> ${order.variant || 'N/A'}
                             </p>
                             <p class="text-sm text-gray-300 mt-1">
-                                <span class="font-semibold">Requirements:</span> ${order.requirements}
+                                <span class="font-semibold">Requirements:</span> ${order.requirements || 'N/A'}
                             </p>
                             <p class="text-xs text-gray-400 mt-1">
                                 <span class="font-semibold">Payment Proof:</span> ${order.paymentProof || 'No screenshot name'}
@@ -608,7 +628,8 @@
             screenshotInput.disabled = false;
         }
 
-        function handleOrderSubmission(event) {
+        // MAIN: Handle order submit + send email with screenshot
+        async function handleOrderSubmission(event) {
             event.preventDefault();
             const form = event.target;
             const serviceId = form.getAttribute('data-service-id');
@@ -632,7 +653,20 @@
             // Generate user-friendly Order ID
             const orderId = "BV" + Math.floor(100000 + Math.random() * 900000); // Example: BV123456
 
-            // Create & Save Order Object
+            // Convert screenshot to Base64 for email
+            let screenshotBase64 = "";
+            let screenshotInfo = "No screenshot uploaded";
+            if (screenshotFile) {
+                try {
+                    screenshotBase64 = await fileToBase64(screenshotFile);
+                    screenshotInfo = `${screenshotFile.name} (${screenshotFile.size} bytes)`;
+                } catch (e) {
+                    console.error("Error converting screenshot:", e);
+                    screenshotBase64 = "";
+                }
+            }
+
+            // --- Create & Save Order Object (local) ---
             const newOrder = {
                 id: orderId,
                 createdAt: new Date().toISOString(),
@@ -644,7 +678,7 @@
                 contactName: contactName,
                 contactEmail: contactEmail,
                 requirements: description,
-                paymentProof: screenshotFile ? `${screenshotFile.name} (${screenshotFile.size} bytes)` : 'No screenshot uploaded',
+                paymentProof: screenshotInfo,
                 upiIdUsed: UPI_ID,
                 status: 'Pending'
             };
@@ -652,36 +686,40 @@
             ORDERS.unshift(newOrder);
             saveOrders();
 
-            // Simulate email notification in console
-            const notificationData = {
-                targetEmail: EMAIL_RECEIVER,
-                type: 'New BoostVerseTG Shop Order',
-                timestamp: newOrder.createdAt,
-                order: {
-                    serviceName: service.name,
-                    category: CATEGORIES[service.cat].title,
-                    priceRange: service.price,
-                    variant: variant,
-                    clientName: contactName,
-                    clientEmail: contactEmail,
-                    requirements: description.substring(0, 150) + (description.length > 150 ? '...' : ''),
-                    paymentProof: screenshotFile ? `File: ${screenshotFile.name} (${screenshotFile.size} bytes)` : 'No screenshot uploaded',
-                    upiIdUsed: UPI_ID,
-                    orderId: orderId
-                }
+            // --- EmailJS Payload ---
+            const emailData = {
+                order_id: orderId,
+                client_name: contactName,
+                client_email: contactEmail,
+                service_name: service.name,
+                category: CATEGORIES[service.cat].title,
+                price_range: service.price,
+                variant: variant,
+                description: description,
+                upi_id: UPI_ID,
+                created_at: newOrder.createdAt,
+                screenshot_base64: screenshotBase64,
+                screenshot_info: screenshotInfo,
+                target_email: EMAIL_RECEIVER
             };
 
-            console.log("=================================================");
-            console.log(`🚀 [SERVER SIMULATION] NOTIFICATION SENT TO: ${EMAIL_RECEIVER}`);
-            console.log(JSON.stringify(notificationData, null, 2));
-            console.log("=================================================");
+            // Send email via EmailJS
+            emailjs.send("service_mzg77mf", "ejs-test-mail-service", emailData)
+                .then(() => {
+                    console.log("EmailJS: Order email sent successfully.");
+                    showToast("📩 Order sent to Owner (Email).");
+                })
+                .catch((error) => {
+                    console.error("EmailJS error:", error);
+                    showToast("⚠️ Order saved, but email failed.");
+                });
 
             // Show confirmation UI with Order ID
             form.classList.add('hidden');
             confirmationMessage.classList.remove('hidden');
             confirmationMessage.innerHTML = `
                 <h4 class="font-bold text-lg mb-2">🎉 Order Placed Successfully!</h4>
-                <p class="mb-2">Thank you! Your order has been submitted and saved.</p>
+                <p class="mb-2">Thank you! Your order has been submitted and emailed to the owner.</p>
                 <p class="text-sm">Your Order ID:</p>
                 <div class="bg-black/30 p-3 rounded-lg mt-2 mb-3 font-mono text-green-400 text-lg tracking-wider break-all">
                     ${orderId}
