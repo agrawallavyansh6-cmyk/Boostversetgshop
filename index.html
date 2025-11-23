@@ -54,6 +54,11 @@
                         class="w-full bg-gray-800 hover:bg-gray-700 transition duration-150 text-purple-200 font-semibold py-3 rounded-xl border border-purple-600 shadow-lg shadow-purple-900/40 text-sm">
                     🔐 Admin / Orders Panel
                 </button>
+                <!-- New Track Order footer button (optional shortcut) -->
+                <button onclick="navigate('track-order')" 
+                        class="w-full bg-green-700 hover:bg-green-600 transition duration-150 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-900/40 text-sm">
+                    📌 Track Order Status
+                </button>
             </div>
         </footer>
 
@@ -143,6 +148,23 @@
             }
         }
 
+        // Naya function: Order ID copy
+        function copyOrderId(orderId) {
+            try {
+                navigator.clipboard.writeText(orderId);
+                showToast("📋 Order ID copied!");
+            } catch (e) {
+                // Fallback
+                const tempInput = document.createElement('input');
+                tempInput.value = orderId;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showToast("📋 Order ID copied!");
+            }
+        }
+
         // --- Orders Persistence (localStorage) ---
 
         function loadOrders() {
@@ -199,6 +221,8 @@
                 renderCategoryList(id);
             } else if (page === 'admin') {
                 renderAdminPage();
+            } else if (page === 'track-order') {
+                renderTrackOrderPage();
             } else {
                 renderHome(); // Default to home
             }
@@ -227,8 +251,79 @@
                 `;
             });
 
+            // Track Order shortcut on home
+            html += `
+                <button onclick="navigate('track-order')" 
+                        class="mt-8 w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-900/50">
+                    📌 Track Your Order Status
+                </button>
+            `;
+
             html += `</section>`;
             appContent.innerHTML = html;
+        }
+
+        // Track Order Page
+        function renderTrackOrderPage() {
+            const html = `
+                <section class="space-y-4 bg-gray-800 p-6 rounded-xl shadow-2xl shadow-gray-900/70">
+                    <h2 class="text-2xl font-bold text-white mb-2">Track Order</h2>
+                    <p class="text-sm text-gray-400 mb-4">Enter your Order ID to check your order status. (Example: <span class="font-mono text-green-400">BV123456</span>)</p>
+                    
+                    <input id="track-id" type="text"
+                           class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:ring-purple-500 focus:border-purple-500"
+                           placeholder="Enter your Order ID">
+
+                    <button onclick="trackOrder()"
+                            class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-lg transition duration-150 shadow-md shadow-purple-900/40">
+                        Check Status
+                    </button>
+
+                    <div id="track-result" class="hidden mt-5 p-4 rounded-lg bg-gray-900 border border-gray-700 text-sm text-gray-100"></div>
+
+                    <button onclick="navigate('home')" class="mt-4 text-purple-400 hover:text-purple-300 flex items-center text-sm">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Back to Shop
+                    </button>
+                </section>
+            `;
+            appContent.innerHTML = html;
+        }
+
+        function trackOrder() {
+            const input = document.getElementById('track-id');
+            const resultBox = document.getElementById('track-result');
+            const id = input.value.trim();
+
+            if (!id) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = `<p class="text-red-400">❌ Please enter a valid Order ID.</p>`;
+                return;
+            }
+
+            // String compare so purane numeric IDs bhi kaam karein
+            const order = ORDERS.find(o => String(o.id) === id);
+
+            if (!order) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = `
+                    <p class="text-red-400 font-semibold mb-1">❌ Order not found.</p>
+                    <p class="text-gray-300 text-xs">Please check your Order ID. Make sure you typed it exactly as shown when the order was placed.</p>
+                `;
+                return;
+            }
+
+            const createdAt = new Date(order.createdAt);
+            const createdStr = isNaN(createdAt.getTime()) ? order.createdAt : createdAt.toLocaleString();
+
+            resultBox.classList.remove('hidden');
+            resultBox.innerHTML = `
+                <p class="text-xs text-gray-400 mb-1">Order ID: <span class="font-mono text-green-400">${order.id}</span></p>
+                <p><span class="font-semibold">Service:</span> ${order.serviceName}</p>
+                <p><span class="font-semibold">Status:</span> <span class="text-indigo-300">${order.status}</span></p>
+                <p><span class="font-semibold">Placed On:</span> ${createdStr}</p>
+                <p class="mt-2 text-xs text-gray-400">If you need help, contact us and mention this Order ID.</p>
+            `;
         }
 
         // Renders the list of services within a category
@@ -352,6 +447,7 @@
                     </form>
 
                     <div id="confirmation-message" class="hidden mt-6 p-4 bg-teal-800/50 border-l-4 border-teal-500 rounded-lg text-white">
+                        <!-- JS se yaha Order ID wali info inject hogi -->
                         <h4 class="font-bold text-lg mb-1">Order Placed!</h4>
                         <p>Thank you! Your order has been submitted and saved. You can view it in the Admin Orders Panel.</p>
                     </div>
@@ -454,7 +550,7 @@
                     html += `
                         <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-lg shadow-gray-900/60">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-xs text-gray-400">#${order.id}</span>
+                                <span class="text-xs text-gray-400">Order ID: <span class="font-mono text-green-400">${order.id}</span></span>
                                 <span class="text-xs text-gray-500">${createdStr}</span>
                             </div>
                             <h3 class="text-lg font-semibold text-white">${order.serviceName}</h3>
@@ -478,7 +574,7 @@
                             <div class="mt-3 flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <span class="text-xs text-gray-400">Status:</span>
-                                    <select onchange="updateOrderStatus(${order.id}, this.value)"
+                                    <select onchange="updateOrderStatus('${order.id}', this.value)"
                                             class="text-xs bg-gray-900 border border-gray-600 rounded px-2 py-1 text-white focus:ring-purple-500 focus:border-purple-500">
                                         <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
                                         <option value="In Progress" ${order.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
@@ -509,11 +605,11 @@
         }
 
         function updateOrderStatus(orderId, newStatus) {
-            const idx = ORDERS.findIndex(o => o.id === orderId);
+            const idx = ORDERS.findIndex(o => String(o.id) === String(orderId));
             if (idx !== -1) {
                 ORDERS[idx].status = newStatus;
                 saveOrders();
-                showToast(`Order #${orderId} status: ${newStatus}`);
+                showToast(`Order ${orderId} status: ${newStatus}`);
             }
         }
 
@@ -550,9 +646,12 @@
                 return;
             }
 
+            // --- Generate Order ID (User Friendly) ---
+            const orderId = "BV" + Math.floor(100000 + Math.random() * 900000); // Example: BV123456
+
             // --- Create & Save Order Object (localStorage) ---
             const newOrder = {
-                id: Date.now(), // simple ID
+                id: orderId, // use generated order ID
                 createdAt: new Date().toISOString(),
                 serviceId: serviceId,
                 serviceName: service.name,
@@ -584,7 +683,8 @@
                     clientEmail: contactEmail,
                     requirements: description.substring(0, 150) + (description.length > 150 ? '...' : ''),
                     paymentProof: screenshotFile ? `File: ${screenshotFile.name} (${screenshotFile.size} bytes)` : 'No screenshot uploaded',
-                    upiIdUsed: UPI_ID
+                    upiIdUsed: UPI_ID,
+                    orderId: orderId
                 }
             };
 
@@ -594,11 +694,27 @@
             console.log(JSON.stringify(notificationData, null, 2));
             console.log("=================================================");
 
-            // Show confirmation UI
+            // Show confirmation UI with Order ID
             form.classList.add('hidden');
             confirmationMessage.classList.remove('hidden');
             confirmationMessage.classList.replace('bg-red-900/50', 'bg-teal-800/50');
-            showToast('✅ Order placed & saved. Check Admin / Orders Panel.');
+            confirmationMessage.innerHTML = `
+                <h4 class="font-bold text-lg mb-2">🎉 Order Placed Successfully!</h4>
+                <p class="mb-2">Thank you! Your order has been submitted and saved.</p>
+                <p class="text-sm">Your Order ID:</p>
+                <div class="bg-black/30 p-3 rounded-lg mt-2 mb-3 font-mono text-green-400 text-lg tracking-wider break-all">
+                    ${orderId}
+                </div>
+                <button onclick="copyOrderId('${orderId}')"
+                        class="bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold px-3 py-2 rounded-lg mb-2">
+                    📋 Copy Order ID
+                </button>
+                <p class="text-xs text-gray-300 mt-1">
+                    Save this Order ID safely. You can use it anytime on the <strong>Track Order</strong> page to check your order status.
+                </p>
+            `;
+
+            showToast('✅ Order placed & saved. Use your Order ID to track status.');
         }
 
         // --- Initialization ---
